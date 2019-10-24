@@ -1,18 +1,28 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <v-container>
+      <v-row>
+        <v-col>
+          <RefillResources />
+        </v-col>
+        <v-col>
+          <RefillMoney />
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import RefillResources from '@/components/RefillResources.vue'
+import RefillMoney from '@/components/RefillMoney.vue'
 
 export default {
   name: 'home',
   components: {
-    HelloWorld
+    RefillResources,
+    RefillMoney
   }
 }
 </script>
