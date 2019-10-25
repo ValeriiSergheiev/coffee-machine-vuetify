@@ -1,34 +1,107 @@
 <template>
+  <div>
+    <h4 class="mb-3">Resources</h4>
     <div>
-        <h4>Resources</h4>
-        <div>
-            <v-text-field type="number" label="Arabica" dense></v-text-field>
-            <v-text-field type="number" label="Robusta" dense></v-text-field>
-            <v-text-field type="number" label="Milk" dense></v-text-field>
-            <v-text-field type="number" label="Sugar" dense></v-text-field>
-            <v-radio-group v-model="selectedglassTypes" :column="false">
-                <v-radio
-                    v-for="item in glassTypes"
-                    :key="item"
-                    :label="`${item} Glass`"
-                    :value="item"
-                ></v-radio>
-            </v-radio-group>
-            <v-text-field v-if="selectedglassTypes == 'Plastic'" type="number" label="Plastic Glass" dense></v-text-field>
-            <v-text-field v-else type="number" label="Paper Glass" dense></v-text-field>
-            <v-btn>Save</v-btn>
-        </div>
+      <v-form
+        ref="form"
+        v-model="valid"
+        lazy-validation
+      >
+        <v-text-field
+          v-model.number="resources.arabica"
+          :rules="resourcesCommonRules"
+          type="number"
+          label="Arabica Coffee"
+          min="0"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model.number="resources.robusta"
+          :rules="resourcesCommonRules"
+          type="number"
+          label="Robusta Coffee"
+          min="0"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model.number="resources.milk"
+          :rules="resourcesCommonRules"
+          type="number"
+          label="Milk"
+          min="0"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model.number="resources.sugar"
+          :rules="resourcesSugarRules"
+          type="number"
+          label="Sugar"
+          min="0"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model.number="resources.plasticGlass"
+          :rules="resourcesCommonRules"
+          type="number"
+          label="Plastic Glass"
+          min="0"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          v-model.number="resources.paperGlass"
+          :rules="resourcesCommonRules"
+          type="number"
+          label="Paper Glass"
+          min="0"
+          required
+        ></v-text-field>
+
+        <v-btn
+          @click="validate"
+          :disabled="!valid"
+        >Save</v-btn>
+      </v-form>
+
     </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "RefillResources",
-        data: () => ({
-            glassTypes: ['Plastic', 'Paper'],
-            selectedglassTypes: 'Plastic'
-        })
+  import {mapGetters} from 'vuex'
+  import {resourcesCommonRulesUtils, resourcesSugarRulesUtils} from '@/utils/validations'
+
+  export default {
+    name: "RefillResources",
+    data: () => ({
+      valid: true,
+      resourcesCommonRules: resourcesCommonRulesUtils,
+      resourcesSugarRules: resourcesSugarRulesUtils,
+      resources: {
+        arabica: null,
+        robusta: null,
+        milk: null,
+        sugar: null,
+        plasticGlass: null,
+        paperGlass: null,
+      }
+    }),
+    computed: {
+      ...mapGetters(['getPaid']),
+      isGetPaid() {
+        return this.getPaid <= 0
+      }
+    },
+    methods: {
+      validate () {
+        this.$refs.form.validate()
+      },
     }
+  }
 </script>
 
 <style scoped>
