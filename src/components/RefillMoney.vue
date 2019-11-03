@@ -8,9 +8,8 @@
         lazy-validation
       >
         <v-text-field
-          v-model.number="paid"
+          v-model.number="setPaid"
           :rules="resourcesCommonRules"
-          @input="pay"
           type="number"
           min="0"
           label="Set Money"
@@ -27,27 +26,43 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+  import { mapState, mapGetters, mapActions } from 'vuex'
   import {resourcesCommonRulesUtils} from '@/utils/validations'
 
   export default {
     name: "RefillMoney",
     data: () => ({
       valid: true,
-      paid: null,
+      // setPaid: null,
       resourcesCommonRules: resourcesCommonRulesUtils
     }),
+    mounted() {
+      let retrievedObj = JSON.parse(localStorage.getItem('client'))
+      this.setPaid = retrievedObj.money
+      this.PAY(+this.setPaid)
+    },
     methods: {
-      ...mapActions(['PAY']),
-      pay() {
-        this.PAY(+this.paid)
-      },
+      ...mapActions('money', ['PAY']),
       validate () {
         this.$refs.form.validate()
+        this.save()
       },
+      save() {
+        this.PAY(+this.setPaid)
+      }
     },
     computed: {
-      ...mapGetters(['getPaid']),
+      ...mapGetters('money', ['getPaid']),
+      ...mapState('money', ['paid']),
+      setPaid: {
+        get() {
+          return this.paid
+        },
+        set(val) {
+          this.PAY(+val)
+          // console.log(val)
+        }
+      },
       isGetPaid() {
         return this.getPaid <= 0
       }

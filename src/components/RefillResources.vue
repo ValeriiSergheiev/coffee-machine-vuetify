@@ -72,7 +72,7 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapState} from 'vuex'
   import {resourcesCommonRulesUtils, resourcesSugarRulesUtils} from '@/utils/validations'
 
   export default {
@@ -91,7 +91,8 @@
       }
     }),
     computed: {
-      ...mapGetters(['getPaid']),
+      ...mapGetters('money', ['getPaid']),
+      ...mapState('money', ['paid']),
       isGetPaid() {
         return this.getPaid <= 0
       }
